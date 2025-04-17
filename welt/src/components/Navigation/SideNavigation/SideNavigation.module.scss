@@ -1,0 +1,79 @@
+@use "../../../utils/partialStyles/pxToRem" as *;
+
+.navigationContainer{
+  height: 100vh;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: rem(10);
+  padding: rem(20) rem(7);
+}
+
+.navigationContainer h6{
+  width: 100%;
+  text-align: left;
+}
+
+.searchBar{
+  background: var(--fg);
+  padding: rem(5) rem(10);
+  display: flex;
+  gap: rem(10);
+  align-items: center;
+  justify-content: center;
+  border-radius: rem(5);
+}
+
+.searchBar svg{
+  width: 15px;
+  height: 15px;
+  fill: var(--primary);
+}
+
+.searchBar input{
+  border: none;
+  background: var(--fg);
+  color: var(--txt-active)
+}
+
+.searchBar input:focus{
+  outline: none;
+}
+
+.path{
+  display: flex;
+  gap: rem(10);
+  padding: rem(5) rem(10);
+  border-radius: rem(5);
+  align-items: center;
+  align-self: flex-start;
+  cursor: pointer;
+  width: 100%;
+}
+
+.path:hover{
+  background: var(--fg);
+}
+
+.path.active:hover{
+  background: var(--surface);
+}
+
+.path svg{
+  width: 15px;
+  height: min-content;
+  fill: var(--txt-secondary);
+}
+
+.path.active svg{
+  fill: var(--primary);
+}
+
+.path p{
+  color: var(--txt-secondary);
+}
+
+.path.active p{
+  color: var(--primary);
+}

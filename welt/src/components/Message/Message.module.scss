@@ -1,0 +1,27 @@
+@use "../../utils/partialStyles/_pxToRem.scss" as *;
+
+.message{
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  max-width: 45%;
+  padding: rem(10);
+}
+
+.incoming{
+  border-radius: rem(7) rem(7) rem(7) 0;
+  align-self: flex-start;
+  background: var(--fg);
+}
+
+.outgoing{
+  border-radius: rem(7) rem(7) 0 rem(7);
+  align-self: flex-end;
+  background: var(--fg-accent);
+}
+
+.time{
+  color: var(--txt-secondary);
+  align-self: flex-end;
+}
+

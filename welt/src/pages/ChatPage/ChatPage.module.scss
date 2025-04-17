@@ -1,0 +1,71 @@
+@use "../../utils/partialStyles/_pxToRem.scss" as *;
+
+.chat{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: rem(10);
+}
+
+.date{
+  background: var(--fg);
+  width: fit-content;
+  padding: rem(7) rem(30);
+  border-radius: rem(35);
+  align-self: center;
+  color: var(--txt-secondary);
+}
+
+.newMessage{
+  display: flex;
+  gap: rem(20);
+  padding: rem(7) rem(10);
+  background: var(--fg);
+  border-radius: rem(7);
+  align-items: center;
+}
+
+.newMessage textarea{
+  width: 100%;
+  border: none;
+  background: inherit;
+  resize: none;
+  color: var(--txt-active);
+}
+
+.newMessage textarea:focus{
+  outline: none;
+}
+
+.newMessage svg{
+  color: var(--primary);
+  height: rem(25);
+  width: fit-content;
+}
+
+.newMessage svg:hover{
+  color: var(--fg-accent);
+}
+
+.chatHeader{
+  padding: 10px 10px 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menuButton{
+  padding: rem(5) rem(8);
+  border-radius: rem(35);
+  cursor: pointer;
+}
+
+.menuButton:hover{
+  background: var(--fg);
+  transition: 0.5s;
+}
+
+.chatHeader svg{
+  color: var(--primary);
+}

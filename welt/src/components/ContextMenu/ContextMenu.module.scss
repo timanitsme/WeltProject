@@ -1,0 +1,18 @@
+@use "../../utils/partialStyles/pxToRem" as *;
+
+.contextMenu {
+  position: absolute;
+  background-color: var(--bg);
+  border-radius: rem(15);
+  z-index: 1000;
+}
+
+.contextMenu div {
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.contextMenu div:hover {
+  background-color: var(--primary);
+  border-radius: rem(15);
+}

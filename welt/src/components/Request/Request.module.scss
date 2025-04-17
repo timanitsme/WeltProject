@@ -1,0 +1,37 @@
+@use "../../utils/partialStyles/_pxToRem.scss" as *;
+
+.request{
+  background: var(--fg);
+  display: flex;
+  gap: 15px;
+  padding: rem(15);
+  border-radius: rem(7);
+}
+
+.request:hover{
+
+}
+
+.col{
+  display: flex;
+  flex-direction: column;
+}
+
+.avatarContainer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: rem(3);
+  cursor: pointer;
+}
+
+.avatarImage {
+  width: rem(50);
+  height: rem(50);
+  border-radius: rem(100);
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+  background: var(--fg);
+}

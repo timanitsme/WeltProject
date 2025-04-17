@@ -1,0 +1,40 @@
+@use "../../../../utils/partialStyles/_pxToRem.scss" as *;
+
+.path svg{
+  width: rem(21);
+  height: rem(21);
+  fill: var(--primary);
+}
+
+.path{
+  width: rem(35);
+  height: rem(35);
+  display: flex;
+  flex-direction: column;
+  background: var(--fg);
+  align-items: center;
+  justify-content: center;
+}
+
+.path{
+  border-radius: rem(7);
+  cursor: pointer;
+}
+
+.path:hover{
+  background: var(--primary);
+  transition: 0.5s;
+}
+
+.path:hover svg{
+  fill: var(--surface);
+  transition: 0.5s;
+}
+
+.path.active{
+  background: var(--primary);
+}
+
+.path.active svg{
+  fill: var(--surface);
+}

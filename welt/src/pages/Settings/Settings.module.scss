@@ -1,0 +1,23 @@
+@use "../../utils/partialStyles/_pxToRem.scss" as *;
+
+.settingsList{
+  display: flex;
+  flex-direction: column;
+  gap: rem(10);
+}
+
+.setting{
+  display: flex;
+  flex-direction: column;
+}
+
+.title{
+  display: flex;
+  margin-bottom: rem(5);
+}
+
+.row{
+  display: flex;
+  gap: rem(10);
+  align-items: center;
+}

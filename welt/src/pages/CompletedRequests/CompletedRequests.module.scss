@@ -1,0 +1,11 @@
+@use "../../utils/partialStyles/_pxToRem.scss" as *;
+
+.requestsList{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 10px 0 10px 0;
+  padding-right: 10px; /*Возможно стоит использовать другой подход*/
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}

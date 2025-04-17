@@ -1,0 +1,36 @@
+# Исключаем временные файлы и директории
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Исключаем локальные настройки и переменные окружения
+.env
+.env.local
+.env.*.local
+
+# Исключаем файлы, связанные с Git
+.git/
+.gitignore
+
+# Исключаем файлы, связанные с IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Исключаем папки с зависимостями
+node_modules/
+venv/
+env/
+dist/
+build/
+
+# Исключаем логи
+logs/
+*.log
+
+# Исключаем тестовые файлы (если они не нужны в контейнере)
+tests/

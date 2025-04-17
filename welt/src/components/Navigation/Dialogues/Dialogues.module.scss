@@ -1,0 +1,111 @@
+@use "../../../utils/partialStyles/pxToRem" as *;
+
+.navigationContainer{
+  height: 100vh;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: rem(10);
+  padding: rem(20) rem(7);
+}
+
+.navigationContainer h6{
+  width: 100%;
+  text-align: left;
+}
+
+.searchBar{
+  width: 100%;
+  background: var(--fg);
+  padding: rem(5) rem(10);
+  display: flex;
+  gap: rem(10);
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: rem(5);
+}
+
+.searchBar svg{
+  width: 15px;
+  height: 15px;
+  fill: var(--primary);
+}
+
+.searchBar input{
+  border: none;
+  background: var(--fg);
+  color: var(--txt-active);
+}
+
+.searchBar input:focus{
+  outline: none;
+}
+
+.avatarContainer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: rem(3);
+  cursor: pointer;
+  width: fit-content;
+  height: fit-content;
+}
+
+.avatarImage {
+  width: rem(35);
+  height: rem(35);
+  min-width: rem(35);
+  min-height: rem(35);
+  border-radius: rem(100);
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+  background: var(--surface);
+}
+
+.avatarImage:hover {
+  transform: scale(1.1);
+}
+
+.dialogue{
+  width: rem(250);
+  max-width: rem(300);
+  display: flex;
+  background: var(--fg);
+  border-radius: rem(7);
+  gap: rem(7);
+  padding: rem(10);
+  transition: background-color 0.5s;
+}
+
+.dialogue:hover{
+  background: var(--bg);
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.col{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.row{
+  width: 100%;
+  display: flex;
+  gap: rem(10);
+  justify-content: space-between;
+}
+
+.dialoguesContainer{
+  display: flex;
+  flex-direction: column;
+  gap: rem(10);
+  overflow-y: auto;
+}
+
+.selected{
+  background: var(--bg);
+  transition: 0.5s;
+}

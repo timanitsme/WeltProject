@@ -1,0 +1,122 @@
+@use "./utils/partialStyles/_pxToRem.scss" as *;
+
+.app {
+  position: relative;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  background: var(--bg);
+  overflow-y: auto;
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.iconPrimary{
+  color: var(--primary);
+}
+
+.iconSecondary{
+  fill: var(--bg);
+}
+
+.contentContainer{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  gap: rem(10);
+  font-family: "Manrope", sans-serif;
+}
+
+.content{
+  align-self: center;
+  height: calc(100vh - #{rem(20)});
+  width: 100%;
+  position: relative;
+  z-index: 2;
+  background: var(--surface);
+  padding: 10px;
+  margin: 10px;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.noPaddings{
+  padding: 0 !important;
+}
+
+.noSelect {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.limited-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 5;
+}
+
+.vertical-divider{
+  height: 100%;
+  width: 1px;
+  border-radius: 15px;
+  background: var(--fg);
+}
+
+.horizontal-divider{
+  width: 100%;
+  height: 1px;
+  border-radius: 15px;
+  background: var(--fg);
+}
+
+.max-width{
+  width: 100%;
+}
+
+.text-primary{
+  color: var(--primary);
+}
+
+.text-secondary{
+  color: var(--txt-secondary)
+}
+
+.button-primary{
+  background: var(--primary);
+  padding: rem(5) rem(10);
+  color: var(--surface);
+  border-radius: rem(5);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.button-primary:hover{
+  background: var(--fg-accent);
+  transition: 0.5s;
+}
+
+.no-overflow{
+  width: max-content;
+}
+
+.bold{
+  font-weight: bold;
+}
+
+.limited-text-1 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+}

@@ -1,0 +1,39 @@
+@use "../../utils/partialStyles/_pxToRem.scss" as *;
+
+.authSection{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.authForm{
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  min-width: fit-content;
+  min-height: fit-content;
+  width: 25vw;
+  padding: rem(15);
+  border-radius: rem(10);
+  gap: rem(10);
+  justify-content: center;
+}
+
+.inputContainer{
+  display: flex;
+  flex-direction: column;
+  gap: rem(2);
+}
+
+.authButton{
+  padding: rem(5);
+  border-radius: rem(5);
+  background: var(--primary);
+  cursor: pointer;
+}
+
+.authButton:hover{
+  background: var(--fg-accent);
+  transition: 0.5s;
+}

@@ -1,0 +1,19 @@
+.navChain{
+  color: var(--txt-secondary);
+}
+
+.active{
+  color: var(--primary);
+  cursor: initial !important;
+  text-decoration: none !important;
+}
+
+.path{
+  cursor: pointer;
+}
+
+.path:hover{
+  color: var(--primary);
+  text-decoration: underline;
+  transition: 0.5s;
+}

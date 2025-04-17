@@ -1,0 +1,47 @@
+services:
+  db:
+    container_name: "db"
+    image: postgres:17-alpine3.20
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "5442:5432"
+    networks:
+      - custom
+
+  api:
+    container_name: "welt-api"
+    build:
+      context: ./weltApi
+      dockerfile: Dockerfile
+    restart: always
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/postgres
+    ports:
+      - "8000:8000"
+    networks:
+      - custom
+    command: >
+      sh -c "alembic upgrade head && uvicorn main:app --host 0.0.0.0 --port 8000"
+
+  frontend:
+    container_name: "welt-frontend"
+    build:
+      context: ./welt
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - custom
+    depends_on:
+      - api
+
+networks:
+  custom:
+    driver: bridge

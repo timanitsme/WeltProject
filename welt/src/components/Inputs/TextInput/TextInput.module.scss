@@ -1,0 +1,11 @@
+@use "../../../utils/partialStyles/_pxToRem.scss" as *;
+
+.textInput {
+  width: 100%;
+  padding: rem(11);
+  border-radius: rem(5);
+  color: var(--txt-active);
+  border: none;
+  outline: none;
+  background: var(--fg);
+}

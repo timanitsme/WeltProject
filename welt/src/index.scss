@@ -1,0 +1,116 @@
+@use 'sass:math';
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap');
+
+:root {
+  --bg: #F7F7F8;
+  --surface: #FFFFFF;
+  --fg: #F1F1F3;
+  --primary: #7284FF;
+  --fg-accent: #D3D3FF;
+  --txt-active: #333333;
+  --txt-secondary: #59595A;
+  --txt-accent: #7284FF;
+}
+
+[data-theme="dark"]{
+  --bg: #141414;
+  --surface: #1A1A1A;
+  --fg: #262626;
+  --primary: #7284FF;
+  --fg-accent: #6A6AB6;
+  --txt-active: #FFFFFF;
+  --txt-secondary: #A8A8A9;
+  --txt-accent: #7284FF;
+}
+
+@mixin fluid-text($max: 48, $min: 16){
+  $maxViewportWidth: 1400;
+  $minViewportWidth: 360;
+
+  $maxSize: math.div($max, 16);
+  $minSize: math.div($min, 16);
+  $maxWidth: math.div($maxViewportWidth, 16);
+  $minWidth: math.div($minViewportWidth, 16);
+
+  $slope: math.div(($maxSize - $minSize), ($maxWidth - $minWidth));
+  $yAxisIntersection: -$minWidth * $slope + $minSize;
+
+  font-size: clamp(
+    #{$minSize * 1rem},
+    #{$yAxisIntersection * 1rem} + #{$slope * 100vw},
+    #{$maxSize * 1rem}
+  );
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+* {
+  font-family: "Manrope", sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  scrollbar-color: var(--primary) var(--fg);
+}
+
+
+h1, h2, h3, h4, h5, h6, body{
+  font-family: "Manrope", sans-serif;
+  color: var(--txt-active);
+}
+
+h1 { @include fluid-text(40, 28) }
+h2 { @include fluid-text(36, 26) }
+h3 { @include fluid-text(32, 24) }
+h4 { @include fluid-text(28, 22) }
+h5 { @include fluid-text(24, 20) }
+h6 { @include fluid-text(20, 18) }
+body { @include fluid-text(18, 16) }
+button { @include fluid-text(18, 16) }
+.text-min {@include fluid-text(16, 14)}
+
+a{
+  all: unset;
+  display: inline-block;
+  color: var(--txt-active);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+a:hover{
+  color: var(--txt-secondary);
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+svg{
+  color: var(--txt-active);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+svg:hover{
+  color: var(--primary);
+  transition: 0.5s;
+}
+
+button{
+  border-style: none;
+}
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+.Toastify__toast-theme--light {
+  background-color: var(--surface);
+  color: var(--txt-active);
+}
