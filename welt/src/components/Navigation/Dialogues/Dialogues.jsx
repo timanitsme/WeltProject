@@ -6,6 +6,7 @@ import styles from "./Dialogues.module.scss"
 import {IoClose} from "react-icons/io5";
 import {useCreatePrivateChatMutation} from "../../../store/services/welt.js";
 import {toast} from "react-toastify";
+import {Avatar} from "@mui/material";
 
 export default function Dialogues({selectedChat, setSelectedChat, dialogues, dialoguesIsLoading, dialoguesError, searchInput, setSearchInput, onNewChatCreated}){
     const location = useLocation()
@@ -53,9 +54,9 @@ export default function Dialogues({selectedChat, setSelectedChat, dialogues, dia
                 {!dialoguesIsLoading && !dialoguesError && dialogues?.chats?.map(((dialogue, index) => {
                     return(
                         <div key={index} className={`${styles.dialogue} noSelect ${selectedChat === dialogue.id? styles.selected: ""}`} onClick={() => selectedChat === dialogue.id? setSelectedChat(null): setSelectedChat(dialogue.id)}>
-                            <div className={styles.avatarContainer}>
-                                <img src={ImagePlaceholder} alt='' className={styles.avatarImage}/>
-                            </div>
+                            {dialogue["is_group_chat"]? <Avatar src={`${dialogue?.icons?.length > 0?  dialogue?.icons[0]: ""}`}></Avatar>
+                            : <Avatar src={`${dialogue?.icons?.length > 0?  dialogue?.icons[0]: ""}`}></Avatar>
+                            }
                             <div className={styles.col}>
                                 <div className={styles.row}>
                                     <p className={"text-min no-overflow bold"}>{dialogue?.name}</p>
@@ -69,9 +70,7 @@ export default function Dialogues({selectedChat, setSelectedChat, dialogues, dia
                 {!dialoguesIsLoading && !dialoguesError && dialogues?.users_without_chats?.map(((dialogue, index) => {
                     return(
                         <div key={index} className={`${styles.dialogue} noSelect`} onClick={() => handleNewDialogue(dialogue.id)}>
-                            <div className={styles.avatarContainer}>
-                                <img src={ImagePlaceholder} alt='' className={styles.avatarImage}/>
-                            </div>
+                            <Avatar src={`${dialogue?.icons? dialogue?.icons: ""}`}></Avatar>
                             <div className={styles.col}>
                                 <div className={styles.row}>
                                     <p className={"text-min no-overflow bold"}>{dialogue?.name}</p>
