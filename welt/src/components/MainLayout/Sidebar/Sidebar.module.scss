@@ -13,8 +13,8 @@
 }
 
 .sidebar svg{
-  width: rem(35);
-  height: rem(35);
+  width: rem(25);
+  height: rem(25);
 }
 
 .projectSelector svg{
@@ -68,11 +68,11 @@
 .avatarImage {
   width: rem(25);
   height: rem(25);
-  border-radius: rem(100);
+  border-radius: 50%;
   object-fit: cover;
   display: block;
   transition: transform 0.3s ease;
-  background: var(--fg);
+  background: var(--surface);
 }
 
 .avatarImage:hover {
@@ -103,4 +103,26 @@
 
 .side{
   display: flex;
+}
+
+.plusButton{
+  width: rem(25);
+  height: rem(25);
+  border-radius: 50%;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.plusButton svg{
+  width: rem(20);
+  height: rem(20);
+  transition: 0.3s;
+}
+
+.plusButton:hover svg{
+  transform: scale(1.1);
+  transition: 0.3s;
 }

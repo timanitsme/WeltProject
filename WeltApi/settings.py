@@ -2,10 +2,21 @@ from envparse import Env
 
 env=Env()
 
+DB_HOST = env.str(
+    "DB_HOST",
+    default="db:5432"
+)
+
 REAL_DATABASE_URL = env.str(
     "REAL_DATABASE_URL",
-    default="postgresql+asyncpg://postgres:postgres@db:5432/postgres"
+    default=f"postgresql+asyncpg://postgres:postgres@localhost:5442/postgres"
 )
+
+BASE_URL = env.str(
+    "BASE_URL",
+    default="http://localhost:8000"
+)
+
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 REFRESH_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7

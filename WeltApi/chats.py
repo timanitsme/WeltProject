@@ -5,12 +5,14 @@ from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy import select, true, exists, and_, or_, func
+from sqlalchemy.orm import aliased
 from starlette import status
 
 from auth import get_current_user
 from database import db_dependency
 from models import Chat, ChatParticipant, Message, User
 from my_websockets import notify_clients_about_new_message, notify_clients_about_message_deletion
+from settings import BASE_URL
 
 router = APIRouter(
     prefix='/chats',
@@ -82,7 +84,7 @@ async def get_my_chats(db: db_dependency, search_query: str = "", current_user: 
                 other_participant = other_participants[0]
                 chat_name = f"{other_participant.first_name} {other_participant.last_name}"
 
-        icons = [p.avatar for p in participants if p.avatar and p.id != current_user_id]
+        icons = [f"{BASE_URL}/{p.avatar}" for p in participants if p.avatar and p.id != current_user_id]
         if not is_group_chat:
             chat_icons = icons[:1]
         else:
@@ -108,27 +110,28 @@ async def get_my_chats(db: db_dependency, search_query: str = "", current_user: 
             if search_query.lower() in chat["name"].lower()
         ]
 
-    # Получаем пользователей, с которыми нет чатов
+    private_chats_subquery = (
+        select(Chat.id)
+        .join(ChatParticipant, Chat.id == ChatParticipant.chat_id)
+        .where(Chat.is_group_chat == False)
+        .group_by(Chat.id)
+        .having(
+            and_(
+                func.count(ChatParticipant.user_id) == 2,
+                func.bool_or(ChatParticipant.user_id == current_user_id)
+            )
+        )
+    )
+
     users_without_chats_query = (
         select(User.id, User.first_name, User.last_name, User.avatar)
         .where(
-            and_(
-                User.id != current_user_id,
-                or_(
-                    ~exists().where(ChatParticipant.user_id == User.id),
-                    ~exists().where(
-                        and_(
-                            ChatParticipant.chat_id == Chat.id,
-                            Chat.is_group_chat == False,
-                            ChatParticipant.user_id == current_user_id,
-                            exists().where(
-                                and_(
-                                    ChatParticipant.chat_id == Chat.id,
-                                    ChatParticipant.user_id == User.id
-                                )
-                            )
-                        )
-                    )
+            User.id != current_user_id,
+            ~exists(
+                select(ChatParticipant)
+                .where(
+                    ChatParticipant.chat_id.in_(private_chats_subquery),
+                    ChatParticipant.user_id == User.id
                 )
             )
         )
@@ -149,7 +152,7 @@ async def get_my_chats(db: db_dependency, search_query: str = "", current_user: 
         {
             "id": user.id,
             "name": f"{user.first_name} {user.last_name}",
-            "icons": user.avatar,
+            "icons": f"{BASE_URL}/{user.avatar}" if user.avatar else None,
             "has_chat": False,
         }
         for user in users_without_chats

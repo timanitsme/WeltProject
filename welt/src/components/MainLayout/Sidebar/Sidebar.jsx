@@ -1,6 +1,6 @@
 import styles from "./Sidebar.module.scss"
 import WeltLogo from "../../../assets/welt-logo.svg?react"
-import {FaBoxTissue, FaCaretDown} from "react-icons/fa6";
+import {FaBoxTissue, FaCaretDown, FaPlus} from "react-icons/fa6";
 import {IoChatbubbles, IoSettingsSharp} from "react-icons/io5";
 import AvatarPlaceholder from "../../../assets/placeholders/avatar-placeholder.svg"
 import Tooltip from "../../Tooltip/Tooltip.jsx";
@@ -10,54 +10,85 @@ import {Link, useLocation, useNavigate} from "react-router-dom";
 import SidebarPath from "./SidebarPath/SidebarPath.jsx";
 import useAuth from "../../../utils/customHooks/useAuth.js";
 import {useGetMyProjectsQuery} from "../../../store/services/welt.js";
+import {FaTasks} from "react-icons/fa";
+import {RiAdminFill} from "react-icons/ri";
+import {setCurrentProject} from "../../../store/services/authSlice.js";
+import {useDispatch} from "react-redux";
 
 
 export default function Sidebar(){
     const {data: myProjects, isLoading: myProjectsIsLoading, error: myProjectsError} = useGetMyProjectsQuery()
-    const {isAuthorized} = useAuth()
+    const {isAuthorized, userProfile, isLoading, currentProject} = useAuth()
     const [isProjectsExpanded, setProjectsExpanded] = useState(false)
-    const projects = [
-        {title: "dowork", image: AvatarPlaceholder},
-        {title: "goplan", image: AvatarPlaceholder},
-        {title: "neurea", image: AvatarPlaceholder},
-        {title: "pokeTrade", image: AvatarPlaceholder},
-        {title: "soFine", image: AvatarPlaceholder},
-    ]
     const navigate = useNavigate()
-    const [displayedProjects, setDisplayedProjects] = useState([projects[0]])
+    const [displayedProjects, setDisplayedProjects] = useState([])
     const currentPage = useLocation().pathname.split("/")
     const [imageSources, setImageSources] = useState([]);
+    const dispatch = useDispatch()
+
+    const handleProjectClick = (project) => {
+        if (project.id === currentProject?.id) return;
+        dispatch(setCurrentProject(project));
+    };
 
     useEffect(() => {
-        if (myProjects) {
-            setImageSources(myProjects.map(project => project.icon));
+        if (myProjects && currentProject && isProjectsExpanded) {
+            const sortedProjects = [
+                currentProject,
+                ...myProjects.filter(p => p.id !== currentProject.id)
+            ];
+
+            setDisplayedProjects(sortedProjects);
         }
-    }, [myProjects]);
+    }, [currentProject]);
+
+    useEffect(() => {
+        if (displayedProjects.length > 0) {
+            setImageSources(displayedProjects.map(project => project.icon));
+        }
+    }, [displayedProjects]);
+
+    useEffect(() => {
+        if (myProjects && !myProjectsIsLoading && myProjects.length > 0) {
+            let selectedProject = currentProject;
+
+            if (!selectedProject || !myProjects.some(p => p.id === selectedProject.id)) {
+                selectedProject = myProjects[0];
+                dispatch(setCurrentProject(selectedProject));
+            }
+
+            const sortedProjects = [
+                selectedProject,
+                ...myProjects.filter(p => p.id !== selectedProject.id)
+            ];
+
+            setDisplayedProjects(isProjectsExpanded ? sortedProjects : [selectedProject]);
+        } else if (!myProjectsIsLoading) {
+            setDisplayedProjects([]); // если проектов нет
+        }
+    }, [myProjects, myProjectsIsLoading, currentProject, dispatch, isProjectsExpanded]);
 
     const handleImageError = (index) => {
         const newImageSources = [...imageSources];
-        newImageSources[index] = AvatarPlaceholder; // Заменяем на запасное изображение
+        newImageSources[index] = AvatarPlaceholder;
         setImageSources(newImageSources);
     };
 
 
     const isCurrentPage = (path) => {
-        return path === currentPage[1] || path === currentPage[2]
+        return path === currentPage[1] || (path === currentPage[2] && currentPage[1] !== "admin")
     }
 
-    useEffect(() => {
-        console.log(`my projects: ${JSON.stringify(myProjects)}`)
-    }, [myProjects]);
 
 
     const handleExpand = () => {
         if (isProjectsExpanded){
             setProjectsExpanded(false)
-            setDisplayedProjects([projects[0]])
+            setDisplayedProjects([myProjects[0]])
         }
         else{
             setProjectsExpanded(true)
-            setDisplayedProjects(projects)
+            setDisplayedProjects(myProjects)
         }
     }
 
@@ -70,15 +101,24 @@ export default function Sidebar(){
                     { myProjects && !myProjectsIsLoading && myProjects?.length !== 0 &&
                         <div className={`${styles.selectorContainer} ${isProjectsExpanded? styles.expanded: ''}`}>
                             <div className={styles.projectSelector}>
-                                {myProjects.map((project, index) => {
+                                {displayedProjects && displayedProjects.map((project, index) => {
                                     return(
                                         <Tooltip text={project.title} key={index}>
-                                            <div className={styles.avatarContainer}>
+                                            <div className={styles.avatarContainer} onClick={() => handleProjectClick(project)}>
                                                 <img src={imageSources[index] !== ""? imageSources[index]: AvatarPlaceholder} alt='' onError={() => handleImageError(index)} className={styles.avatarImage}/>
                                             </div>
                                         </Tooltip>
                                     )
                                 })
+                                }
+                                {(isProjectsExpanded || displayedProjects.length === 0) && userProfile?.role === "ADMIN" &&
+                                    <Tooltip text={"Новый проект"}>
+                                        <div className={styles.avatarContainer} >
+                                            <div className={styles.plusButton}>
+                                                <FaPlus/>
+                                            </div>
+                                        </div>
+                                    </Tooltip>
                                 }
                             </div>
                             <div className={styles.expand} onClick={handleExpand}>
@@ -86,9 +126,11 @@ export default function Sidebar(){
                             </div>
                         </div>
                     }
-                    <div className="horizontal-divider" onClick={() => navigate("/project/requests")}/>
-                    <SidebarPath Icon={FaBoxTissue} title={"Заявки"} isCurrent={isCurrentPage("requests")} onClick={() => navigate("/project/requests")}/>
+                    <div className="horizontal-divider" onClick={() => navigate("/requests")}/>
+                    <SidebarPath Icon={FaBoxTissue} title={"Заявки"} isCurrent={isCurrentPage("requests")} onClick={() => navigate("/requests")}/>
+                    <SidebarPath Icon={FaTasks} title={"Задачи"} isCurrent={isCurrentPage("tasks")} onClick={() => navigate("/tasks")}/>
                     <SidebarPath Icon={IoChatbubbles} title={"Чат"} isCurrent={isCurrentPage("chats")} onClick={() => navigate("/chats")}/>
+                    {!isLoading && userProfile && userProfile?.role === "ADMIN" && <SidebarPath Icon={RiAdminFill} title={"Администрирование"} isCurrent={isCurrentPage("admin")} onClick={() => navigate("/admin")}/>}
                     <span className={styles.bottomPaths}>
                 <div className="horizontal-divider"/>
                     <SidebarPath Icon={IoSettingsSharp} title={"Настройки"} isCurrent={isCurrentPage("settings")} onClick={() => navigate("/settings")}/>

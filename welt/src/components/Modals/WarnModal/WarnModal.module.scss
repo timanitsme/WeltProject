@@ -1,0 +1,20 @@
+@use "../../../utils/partialStyles/_pxToRem.scss" as *;
+
+.warn{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: rem(10);
+}
+
+.warn svg{
+  align-self: center;
+  width: rem(50);
+  height: fit-content;
+}
+
+.yesNoButtons{
+  display: flex;
+  gap: rem(15);
+  justify-content: center;
+}

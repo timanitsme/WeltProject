@@ -1,0 +1,200 @@
+@use "../../../utils/partialStyles/_pxToRem.scss" as *;
+
+.sidebar{
+  width: 100vw;
+  height: rem(70);
+  background: var(--surface);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: rem(10);
+  padding: rem(7) rem(20);
+}
+
+.sidebar svg{
+  width: rem(25);
+  height: rem(25);
+}
+
+.projectSelector svg{
+  width: rem(21);
+  height: rem(21);
+  fill: var(--primary);
+}
+
+.projectSelector{
+  width: rem(35);
+  height: rem(35);
+  display: flex;
+  flex-direction: column;
+  background: var(--fg);
+  align-items: center;
+  justify-content: center;
+}
+
+.expanded .projectSelector{
+  height: fit-content;
+}
+
+.selectorContainer{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+}
+
+.selectorContainer.expanded{
+  top: rem(10);
+}
+
+.projectSelector{
+  border-radius: rem(7) rem(7) 0 0;
+
+}
+
+.expand{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  border-radius: 0 0 rem(7) rem(7);
+  cursor: pointer;
+}
+
+.avatarContainer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: rem(3);
+  cursor: pointer;
+}
+
+.avatarImage {
+  width: rem(25);
+  height: rem(25);
+  border-radius: rem(100);
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+  background: var(--fg);
+}
+
+.avatarImage:hover {
+  transform: scale(1.1);
+}
+
+
+.expand svg{
+  width: rem(18);
+  height: rem(12);
+  fill: var(--bg);
+  transition: transform 0.3s ease;
+}
+
+.expanded .expand svg{
+  transform: rotate(180deg);
+}
+
+.bottomPaths{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  justify-self: flex-end;
+  margin-top: auto;
+}
+
+.sidebarRow{
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: rem(15);
+}
+
+.menuButton{
+  margin-left: auto;
+  background: var(--surface);
+  padding: rem(3) rem(5);
+  border-radius: rem(5);
+}
+
+.menuButton svg{
+  width: rem(20);
+  height: rem(20);
+  color: var(--primary);
+}
+
+.side{
+  display: flex;
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #000;
+}
+
+.menu {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: var(--surface);
+  border-bottom: rem(1) solid var(--fg);
+  border-left: rem(1) solid var(--fg);
+  border-radius: rem(5);
+  z-index: 1000;
+  width: 20vw;
+  min-width: fit-content;
+}
+
+.menuList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menuList li {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--fg);
+}
+
+.menuList li a {
+  text-decoration: none;
+  color: var(--txt-active);
+  font-size: 16px;
+}
+
+.menuList li a.active {
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.menuList li:last-child{
+  border-bottom: none;
+}
+
+.plusButton{
+  width: rem(25);
+  height: rem(25);
+  border-radius: 50%;
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+
+.plusButton svg{
+  width: rem(20);
+  height: rem(20);
+  transition: 0.3s;
+}
+
+.plusButton:hover svg{
+  transform: scale(1.1);
+  transition: 0.3s;
+}

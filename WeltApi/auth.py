@@ -1,13 +1,14 @@
+import os
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import jwt, JWTError
 from passlib.context import CryptContext
 from pydantic import BaseModel
 from sqlalchemy import select
 from starlette import status
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from database import db_dependency
 from models import User, Role
@@ -28,7 +29,6 @@ class CreateUserRequest(BaseModel):
     email: str
     password: str
     role_id: UUID
-    avatar: str
 
 class SignUpUserRequest(BaseModel):
     username: str
@@ -50,8 +50,8 @@ class CurrentUser(BaseModel):
     avatar: Optional[str] = None
 
 @router.post('/signup', summary="Создание нового пользователя")
-async def create_user(db: db_dependency, data: CreateUserRequest):
-    query = select(User).where(User.email == data.email)
+async def create_user(db: db_dependency, first_name: str = Form(...), last_name: str = Form(...), email: str = Form(...), password: str = Form(...), role_id: UUID = Form(...),  avatar: Optional[UploadFile] = File(None)):
+    query = select(User).where(User.email == email)
     result = await db.execute(query)
     user = result.scalar_one_or_none()
     if user is not None:
@@ -59,12 +59,25 @@ async def create_user(db: db_dependency, data: CreateUserRequest):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Пользователь с указанным email уже есть в базе данных"
         )
+
+    avatar_path = None
+    if avatar:
+        file_extension = avatar.filename.split(".")[-1]
+        file_name = f"{uuid4()}.{file_extension}"
+        avatar_path = f"static/avatars/{file_name}"
+
+        os.makedirs("static/avatars", exist_ok=True)
+        with open(avatar_path, "wb") as f:
+            content = await avatar.read()
+            f.write(content)
+
     user = User(
-        first_name=data.first_name,
-        last_name=data.last_name,
-        email=data.email,
-        password=bcrypt_context.hash(data.password),
-        role_id=data.role_id
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
+        password=bcrypt_context.hash(password),
+        role_id=role_id,
+        avatar = avatar_path
     )
     db.add(user)
     await db.commit()

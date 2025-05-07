@@ -7,6 +7,7 @@ import {jwtDecode} from "jwt-decode";
 const initialState = {
     isAuthorized: false,
     userProfile: null,
+    currentProject: null,
     isLoading: true,
     error: null,
     isInitialized: false
@@ -17,10 +18,8 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         setCredentials: (state, action) => {
-            console.log("hey")
             const { access_token, refresh_token } = action.payload;
             state.isAuthorized = true;
-            console.log("Setting tokens:", { access_token, refresh_token });
             document.cookie = `access_token=${access_token}; path=/; max-age=${60 * 30}`;
             document.cookie = `refresh_token=${refresh_token}; path=/; max-age=${60 * 60 * 24 * 7}`;
         },
@@ -36,6 +35,9 @@ const authSlice = createSlice({
         setIsLoading: (state, action) => {
             state.isLoading = action.payload;
         },
+        setCurrentProject: (state, action) => {
+            state.currentProject = action.payload;
+        },
         setError: (state, action) => {
             state.error = action.payload;
         },
@@ -45,7 +47,7 @@ const authSlice = createSlice({
     },
 });
 
-export const { setCredentials, logout, setUserProfile, setIsLoading, setError, setIsInitialized } = authSlice.actions;
+export const { setCredentials, logout, setUserProfile, setIsLoading, setError, setIsInitialized, setCurrentProject } = authSlice.actions;
 
 export const initializeAuthState = () => async (dispatch, getState) => {
     const { isInitialized } = getState().auth;
@@ -59,7 +61,6 @@ export const initializeAuthState = () => async (dispatch, getState) => {
         let refreshToken = getRefreshToken();
 
         if (!accessToken || !refreshToken) {
-            console.warn('Access токен или refresh токен не найдены');
             throw new Error('Access токен или refresh токен не найдены');
         }
 
@@ -68,7 +69,6 @@ export const initializeAuthState = () => async (dispatch, getState) => {
 
         if (decodedToken.exp < currentTime) {
             // Access токен истёк, пытаемся обновить его
-            console.log('Access токен истёк, выполняем обновление...');
             const refreshResult = await dispatch(weltApi.endpoints.refreshToken.initiate({ refresh_token: refreshToken }));
             if (refreshResult.data) {
                 await dispatch(setCredentials(refreshResult.data));
@@ -80,15 +80,19 @@ export const initializeAuthState = () => async (dispatch, getState) => {
         // Загружаем профиль пользователя через API
         const response = await dispatch(weltApi.endpoints.getProfile.initiate());
         if (response.data) {
-            console.log("initializeAuthState: Пользователь авторизован");
             dispatch(setCredentials({ access_token: accessToken, refresh_token: refreshToken })); // Устанавливаем токены в состояние
             dispatch(setUserProfile(response.data)); // Устанавливаем данные профиля
         }
+
+        const savedProject = localStorage.getItem("currentProject");
+        if (savedProject) {
+            dispatch(setCurrentProject(JSON.parse(savedProject)));
+        }
+
     } catch (error) {
         console.error('Ошибка при проверке сессии:', error);
         dispatch(logout()); // Выполняем выход в случае ошибки
     } finally {
-        console.log("setting isLoading")
         dispatch(setIsLoading(false)); // Снимаем состояние загрузки
     }
 };

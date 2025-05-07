@@ -11,6 +11,8 @@
   background: var(--bg);
   overflow-y: auto;
   transition: background-color 0.5s ease, color 0.5s ease;
+  height: 100vh;
+  width: 100vw;
 }
 
 .iconPrimary{
@@ -119,4 +121,15 @@
   overflow: hidden;
   text-overflow: ellipsis;
   -webkit-line-clamp: 1;
+}
+
+.no-scroll {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+@media (max-width: 700px) {
+  .app, .contentContainer{
+    flex-direction: column;
+  }
 }

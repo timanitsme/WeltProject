@@ -5,6 +5,7 @@ from sqlalchemy import select
 from auth import get_current_user
 from database import db_dependency
 from models import Project, ProjectUser
+from settings import BASE_URL
 
 router = APIRouter(
     prefix='/projects',
@@ -23,7 +24,16 @@ async def get_my_projects(db: db_dependency, current_user: dict = Depends(get_cu
     )
     result = await db.execute(query)
     projects = result.scalars().all()
-    return projects
+
+    projects_data = [
+        {
+            "id": project.id,
+            "title": project.title,
+            "icon": f"{BASE_URL}/{project.icon}" if project.icon else None,
+        }
+        for project in projects
+    ]
+    return projects_data
 
 
 

@@ -1,0 +1,59 @@
+@use "../../../utils/partialStyles/_pxToRem.scss" as *;
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: var(--surface);
+  padding: rem(10);
+  border-radius: rem(10);
+  box-shadow: 0 rem(2) rem(10) rgba(0, 0, 0, 0.1);
+  width: fit-content;
+  margin: rem(25);
+  min-height: rem(100);
+  min-width: rem(100);
+  max-width: 95vw;
+  max-height: 95vh;
+}
+
+
+.modalHeader{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 10px;
+}
+
+.modalHeader svg{
+  color: var(--txt-active);
+  width: rem(20);
+  height: rem(20);
+}
+
+.modalHeader svg:hover{
+  color: var(--primary);
+  transition: 0.5s;
+}
+
+
+.titleWrapper{
+  flex-grow: 1;
+  text-align: center;
+}
+
+
+@media (max-width: 500px) {
+  .modalContent{
+    padding: rem(7);
+  }
+}

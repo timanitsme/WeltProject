@@ -1,0 +1,71 @@
+@use "../../utils/partialStyles/_pxToRem.scss" as *;
+
+.sideContainerRow{
+  padding: rem(7) rem(20);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  border-top: rem(1) solid var(--fg);
+}
+
+.sideContainerRow button{
+  background: none;
+  display: flex;
+  align-items: center;
+}
+
+.sideContainerRow svg{
+  color: var(--primary);
+}
+
+.mobileMenuOverlay {
+  position: fixed;
+  top: rem(70);
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  display: flex;
+  justify-content: flex-start;
+  align-items: stretch;
+  flex-direction: column;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.mobileMenuContent {
+  width: 100%;
+  background-color: var(--surface);
+  border-top: rem(1) solid var(--fg);
+  overflow-y: auto;
+  padding: 20px;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+}
+
+.mobileMenuOverlay.open .mobileMenuContent {
+  transform: translateX(0);
+}
+
+.mobileMenuOverlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.contentButtonRow{
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.contentButtonRow button{
+  background: none;
+}
+
+.contentButtonRow svg{
+  color: var(--primary);
+  width: rem(25);
+  height: rem(25);
+}

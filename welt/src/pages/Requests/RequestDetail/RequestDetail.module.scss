@@ -1,0 +1,106 @@
+@use "../../../utils/partialStyles/pxToRem" as *;
+
+.requestInfo{
+  display: flex;
+  flex-direction: row;
+  gap: rem(15);
+  justify-content: space-between;
+}
+
+.col{
+  display: flex;
+  flex-direction: column;
+}
+
+.fit{
+  min-width: fit-content;
+}
+
+.chat{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  gap: rem(10);
+}
+
+.date{
+  background: var(--fg);
+  width: fit-content;
+  padding: rem(7) rem(30);
+  border-radius: rem(35);
+  align-self: center;
+  color: var(--txt-secondary);
+}
+
+.newMessage{
+  display: flex;
+  gap: rem(20);
+  padding: rem(7) rem(10);
+  background: var(--fg);
+  border-radius: rem(7);
+  align-items: center;
+}
+
+.newMessage textarea{
+  width: 100%;
+  border: none;
+  background: inherit;
+  resize: none;
+  color: var(--txt-active);
+}
+
+.newMessage textarea:focus{
+  outline: none;
+}
+
+.newMessage svg{
+  color: var(--primary);
+  height: rem(25);
+  width: fit-content;
+}
+
+.newMessage svg:hover{
+  color: var(--fg-accent);
+}
+
+.menuButton{
+  padding: rem(5) rem(8);
+  border-radius: rem(35);
+  cursor: pointer;
+}
+
+.menuButton:hover{
+  background: var(--fg);
+  transition: 0.5s;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  width: fit-content;
+  right: 0;
+  background-color: var(--bg);
+  border-radius: 4px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: max-content;
+}
+
+.menu li {
+  width: fit-content;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: var(--txt-active)
+}
+
+.menu li:hover {
+  background-color: var(--primary);
+}

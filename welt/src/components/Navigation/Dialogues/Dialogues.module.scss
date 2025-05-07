@@ -109,3 +109,15 @@
   background: var(--bg);
   transition: 0.5s;
 }
+
+
+@media (max-width: 700px) {
+  .dialoguesContainer{
+    width: 100%;
+  }
+
+  .dialogue{
+    max-width: 100%;
+    width: 100%;
+  }
+}

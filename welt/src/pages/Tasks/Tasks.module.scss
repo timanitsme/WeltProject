@@ -1,0 +1,67 @@
+@use "../../utils/partialStyles/pxToRem" as *;
+
+.headingSection{
+  background: var(--surface);
+  padding: rem(15);
+  border-radius: rem(10);
+}
+
+.tasksColumns{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+
+.taskHeader{
+  background: var(--surface);
+  padding: rem(10);
+  border-radius: rem(5);
+  display: flex;
+  align-items: center;
+  gap: rem(7);
+}
+
+.circle{
+  background: var(--fg);
+  width: rem(7);
+  height: rem(7);
+  border-radius: 50%;
+}
+
+.roundButton{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(25);
+  height: rem(25);
+  padding: rem(5);
+  border-radius: 50%;
+  background: var(--primary);
+  margin-left: auto;
+}
+
+.roundButton svg{
+  color: var(--surface);
+  transition: transform 0.5s ease;
+}
+
+.roundButton:hover{
+  background: var(--fg-accent);
+  transition: 0.5s;
+}
+
+.taskCol{
+  display: flex;
+  flex-direction: column;
+  gap: rem(10);
+}
+
+.task{
+  background: var(--surface);
+  padding: rem(10);
+  border-radius: rem(5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: rem(7);
+}

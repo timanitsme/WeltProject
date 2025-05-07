@@ -18,7 +18,7 @@ class Project(Base):
     __tablename__="projects"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title = Column(String, nullable=False)
-    icon = Column(String, nullable=False)
+    icon = Column(String, nullable=True)
 
 
 # Пользователи
@@ -53,10 +53,32 @@ class Request(Base):
 
 
 # Статусы задач
-'''class TaskStatus(Base):
-    __tablename__="task_statuses"
+class TaskStatus(Base):
+    __tablename__ = "task_statuses"
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    title = Column(String, nullable=False)'''
+    title = Column(String, nullable=False)
+
+class TaskPriority(Base):
+    __tablename__ = "task_priorities"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    title = Column(String, nullable=False)
+
+class Task(Base):
+    __tablename__ = "tasks"
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    title = Column(String, nullable=False)
+    description = Column(String, nullable=True)
+    project_id = Column(UUID, ForeignKey("projects.id", ondelete="CASCADE"), nullable=False)
+    status_id = Column(UUID, ForeignKey("task_statuses.id"), nullable=False)
+    priority_id = Column(UUID, ForeignKey("task_priorities.id"), nullable=False)
+    deadline = Column(DateTime, nullable=True)
+    created_at = Column(DateTime, default=func.now())
+    updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+
+class TaskAssignment(Base):
+    __tablename__ = "task_assignments"
+    task_id = Column(UUID, ForeignKey("tasks.id", ondelete="CASCADE"), primary_key=True)
+    user_id = Column(UUID, ForeignKey("users.id", ondelete="CASCADE"), primary_key=True)
 
 class ProjectUser(Base):
     __tablename__="projects_users"

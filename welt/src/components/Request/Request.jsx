@@ -48,7 +48,7 @@ export default function Request({request}){
             </div>
             <div className={styles.col} style={{gap: "10px"}}>
                 <p><span className="text-secondary">Статус:</span> <span className="text-primary">{getStatusTitle(request?.status?.title)}</span></p>
-                <button className="button-primary" onClick={() => navigate(`/project/request/${request?.id}`)}>Подробнее</button>
+                <button className="button-primary" onClick={() => navigate(`/request/${request?.id}`)}>Подробнее</button>
             </div>
         </div>
     )
