@@ -1,0 +1,13 @@
+@use "../../../../utils/partialStyles/_pxToRem.scss" as *;
+
+.pickerContainer{
+  display: flex;
+  flex-direction: column;
+}
+
+.dateTimeLabel {
+  display: block;
+  margin-bottom: rem(5);
+  font-weight: bold;
+}
+

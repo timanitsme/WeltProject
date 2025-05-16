@@ -115,7 +115,7 @@ export default function AdminUsers(){
         <PageBuilder paths={paths} sideComponent={<SideNavigation title="Администрирование" paths={getAdminSidePaths()} alias={"users"}/>}>
             <div className={styles.spaceBetween}>
                 <h3>Пользователи</h3>
-                <button className={`button-primary ${styles.iconButton}`}><FaPlus/> Добавить пользователя</button>
+                <button className={`button-primary ${styles.iconButton}`} onClick={() => navigate("/admin/users/add")}><FaPlus/> Добавить пользователя</button>
             </div>
             <div className="horizontal-divider"></div>
             {usersIsLoading &&
@@ -154,6 +154,7 @@ export default function AdminUsers(){
                             pageSizeOptions={[1, 5, 10, 20]}
                             paginationMode="server"
                             localeText={ruRU.components.MuiDataGrid.defaultProps.localeText}
+
                         />
                     </Box>
                     <Menu

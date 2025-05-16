@@ -114,3 +114,28 @@ button::-moz-focus-inner,
   background-color: var(--surface);
   color: var(--txt-active);
 }
+
+.MuiDataGrid-root {
+  --DataGrid-t-color-background-base: var(--surface) !important;
+}
+
+.MuiDataGrid-selectedRowCount {
+  color: var(--txt-active) !important;
+}
+
+.MuiPickersOutlinedInput-root {
+  background-color: var(--fg) !important;
+  border-radius: 5px !important;
+}
+
+.MuiPickersOutlinedInput-input {
+  color: var(--txt-active) !important;
+}
+
+.MuiPickersOutlinedInput-notchedOutline {
+  border: none !important; /* Убираем границу */
+}
+
+.Mui-focused .MuiPickersOutlinedInput-notchedOutline {
+  border: none !important; /* Убираем границу при фокусе */
+}

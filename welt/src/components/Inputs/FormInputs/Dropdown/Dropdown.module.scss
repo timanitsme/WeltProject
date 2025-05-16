@@ -1,0 +1,13 @@
+@use "../../../../utils/partialStyles/_pxToRem.scss" as *;
+
+.dropdownInput {
+  margin-bottom: rem(15);
+}
+
+.dropdownInput label {
+  display: block;
+  margin-bottom: rem(5);
+  font-weight: bold;
+}
+
+

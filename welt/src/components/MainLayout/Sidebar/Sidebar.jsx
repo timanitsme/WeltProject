@@ -113,7 +113,7 @@ export default function Sidebar(){
                                 }
                                 {(isProjectsExpanded || displayedProjects.length === 0) && userProfile?.role === "ADMIN" &&
                                     <Tooltip text={"Новый проект"}>
-                                        <div className={styles.avatarContainer} >
+                                        <div className={styles.avatarContainer} onClick={() => navigate("/admin/projects/add")} >
                                             <div className={styles.plusButton}>
                                                 <FaPlus/>
                                             </div>

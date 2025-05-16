@@ -105,6 +105,21 @@ export const weltApi = createApi({
                 return `admin/all-requests?page=${page}&per_page=${perPage}`
             }
         })),
+        getAllTasks: (builder.query({
+            query: ({page, perPage}) => {
+                return `admin/all-tasks?page=${page}&per_page=${perPage}`
+            }
+        })),
+        getAllTaskPriorities: (builder.query({
+            query: ({page, perPage}) => {
+                return `admin/all-task-priorities?page=${page}&per_page=${perPage}`
+            }
+        })),
+        getAllTaskStatuses: (builder.query({
+            query: ({page, perPage}) => {
+                return `admin/all-task-statuses?page=${page}&per_page=${perPage}`
+            }
+        })),
         deleteRequest: builder.mutation({
             query: ({id}) => {
                 return({
@@ -117,6 +132,77 @@ export const weltApi = createApi({
                 })
             }
         }),
+        deleteTask: builder.mutation({
+            query: ({id}) => {
+                return({
+                    url: 'admin/delete-task',
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: id }),
+                })
+            }
+        }),
+        createProject: builder.mutation({
+            query: ({ title, icon }) => {
+                const formData = new FormData();
+                formData.append('title', title);
+
+                if (icon) {
+                    formData.append('icon', icon);
+                }
+
+                return {
+                    url: 'admin/create-project',
+                    method: 'POST',
+                    body: formData,
+                };
+            },
+        }),
+        createUser: builder.mutation({
+            query: ({ first_name, last_name, email, password, role_id, avatar }) => {
+                const formData = new FormData();
+                formData.append('first_name', first_name);
+                formData.append('last_name', last_name);
+                formData.append('email', email);
+                formData.append('password', password);
+                formData.append('role_id', role_id);
+                if (avatar) {
+                    formData.append('avatar', avatar);
+                }
+
+                return {
+                    url: 'auth/signup',
+                    method: 'POST',
+                    body: formData,
+                };
+            },
+        }),
+        createRole: (builder.mutation({
+            query: ({title}) => {
+                return({
+                    url: `admin/create-role`,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ title }),
+                })
+            }
+        })),
+        createTask: (builder.mutation({
+            query: ({title, description, project_id, status_id, priority_id, deadline, assignee_ids}) => {
+                return({
+                    url: `admin/create-task`,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ title, description, project_id, status_id, priority_id, deadline, assignee_ids }),
+                })
+            }
+        })),
 
         // chats
         getMyDialogues: (builder.query({
@@ -208,7 +294,10 @@ export const weltApi = createApi({
         // users
 
 
-
+        //tasks
+        getTasksByProject: (builder.query({
+            query: ({projectId}) => `tasks/project/${projectId}`
+        })),
 
 
 
@@ -223,6 +312,9 @@ useDeleteMessageMutation, useCreatePrivateChatMutation, useGetRequestsQuery,
 useGetRequestByIdQuery, useGetSentRequestsQuery, useChangeRequestStatusMutation,
 useGetAllUsersQuery, useDeleteUserMutation, useGetAllRolesQuery,
 useDeleteRoleMutation, useGetAllProjectsQuery, useDeleteProjectMutation,
-useGetAllRequestsQuery, useDeleteRequestMutation} = weltApi
+useGetAllRequestsQuery, useDeleteRequestMutation, useCreateProjectMutation,
+useCreateRoleMutation, useGetAllTasksQuery, useDeleteTaskMutation,
+useCreateUserMutation, useCreateTaskMutation, useGetAllTaskPrioritiesQuery,
+useGetAllTaskStatusesQuery, useGetTasksByProjectQuery} = weltApi
 
 export { baseQuery };

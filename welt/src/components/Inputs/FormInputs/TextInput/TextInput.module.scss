@@ -1,0 +1,21 @@
+@use "../../../../utils/partialStyles/_pxToRem.scss" as *;
+
+.textInput {
+  margin-bottom: rem(15);
+}
+
+.textInput label {
+  display: block;
+  margin-bottom: rem(5);
+  font-weight: bold;
+}
+
+.textInput input[type="text"], .textInput input[type="email"], .textInput input[type="password"] {
+  width: 100%;
+  padding: rem(11);
+  border-radius: rem(5);
+  color: var(--txt-active);
+  border: none;
+  outline: none;
+  background: var(--fg);
+}

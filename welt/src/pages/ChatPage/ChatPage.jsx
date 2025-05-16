@@ -182,7 +182,7 @@ export default function ChatPage(){
                             </div>
                             <div className={styles.newMessage}>
                                 <textarea rows={1} placeholder="Введите ваше сообшение..." value={newMessage} onChange={handleMessageChange} onKeyDown={handleKeyDown}/>
-                                <FaPaperclip/>
+                                {/*<FaPaperclip/>*/}
                                 <FaPaperPlane onClick={handleSendMessage}/>
                             </div>
                         </>

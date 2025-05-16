@@ -1,5 +1,7 @@
 import os
-from typing import Optional
+import uuid
+from datetime import timezone, datetime
+from typing import Optional, List
 
 from fastapi import APIRouter, HTTPException, Depends, Query, UploadFile, File, Form
 from pydantic import BaseModel
@@ -10,7 +12,7 @@ from starlette import status
 from auth import get_current_user_with_roles, get_current_user
 from database import db_dependency
 from models import Role, Project, User, ProjectUser, Chat, RequestStatus, ChatParticipant, Request, TaskStatus, \
-    TaskPriority
+    TaskPriority, Task, TaskAssignment
 from settings import BASE_URL
 
 router = APIRouter(
@@ -31,7 +33,7 @@ class CreateRequestStatusRequest(BaseModel):
     title: str
 
 class IdRequest(BaseModel):
-    id: UUID
+    id: int
 
 @router.post('/create-role', summary="Создание новой роли")
 async def create_role(db: db_dependency, data: CreateRoleRequest):
@@ -51,7 +53,7 @@ async def create_role(db: db_dependency, data: CreateRoleRequest):
     await db.refresh(role)
 
 @router.get('/all-roles', summary="Получение всех ролей")
-async def get_all_roles(db: db_dependency, current_user: dict = Depends(get_current_user_with_roles(["ADMIN", "MODERATOR"])), page: int = Query(0, ge=0, description="Номер страницы"), per_page: int = Query(10, ge=1, le=100, description="Количество элементов на странице")):
+async def get_all_roles(db: db_dependency, page: int = Query(0, ge=0, description="Номер страницы"), per_page: int = Query(10, ge=1, le=100, description="Количество элементов на странице")):
     offset = page * per_page
 
     query = select(Role).offset(offset).limit(per_page)
@@ -91,7 +93,7 @@ async def get_all_task_statuses(db: db_dependency, current_user: dict = Depends(
     }
 
 @router.get('/all-task-priorities', summary="Получение всех приоритетов задач")
-async def get_all_roles(db: db_dependency, current_user: dict = Depends(get_current_user_with_roles(["ADMIN", "MODERATOR"])), page: int = Query(0, ge=0, description="Номер страницы"), per_page: int = Query(10, ge=1, le=100, description="Количество элементов на странице")):
+async def get_all_task_priorities(db: db_dependency, current_user: dict = Depends(get_current_user_with_roles(["ADMIN", "MODERATOR"])), page: int = Query(0, ge=0, description="Номер страницы"), per_page: int = Query(10, ge=1, le=100, description="Количество элементов на странице")):
     offset = page * per_page
 
     query = select(TaskPriority).offset(offset).limit(per_page)
@@ -109,6 +111,27 @@ async def get_all_roles(db: db_dependency, current_user: dict = Depends(get_curr
         "total_pages": (total_priorities + per_page - 1) // per_page,
         "data": priorities
     }
+
+@router.get('/all-tasks', summary="Получение всех задач")
+async def get_all_tasks(db: db_dependency, current_user: dict = Depends(get_current_user_with_roles(["ADMIN", "MODERATOR"])), page: int = Query(0, ge=0, description="Номер страницы"), per_page: int = Query(10, ge=1, le=100, description="Количество элементов на странице")):
+    offset = page * per_page
+
+    query = select(Task).offset(offset).limit(per_page)
+    result = await db.execute(query)
+    tasks = result.scalars().all()
+
+    total_query = select(func.count()).select_from(Task)
+    total_result = await db.execute(total_query)
+    total_tasks = total_result.scalar()
+
+    return {
+        "page": page,
+        "per_page": per_page,
+        "total_items": total_tasks,
+        "total_pages": (total_tasks + per_page - 1) // per_page,
+        "data": tasks
+    }
+
 
 @router.delete('/delete-role', summary="Удаление роли по id")
 async def delete_role(db: db_dependency, data: DeleteRoleRequest):
@@ -141,15 +164,15 @@ async def create_request_status(db: db_dependency, data: CreateRequestStatusRequ
     await db.commit()
     await db.refresh(request_status)
 
-@router.delete('/delete-request-status', summary="Удаление роли по id")
-async def delete_request_status(db: db_dependency, data: IdRequest):
+@router.delete('/delete-request-status', summary="Удаление статуса заявки по id")
+async def delete_request_status(db: db_dependency, data: DeleteRoleRequest):
     query = select(RequestStatus).where(RequestStatus.id == data.id)
     result = await db.execute(query)
     request_status = result.scalar_one_or_none()
     if request_status is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Роли с таким id нет в базе данных"
+            detail="Статуса заявки с таким id нет в базе данных"
         )
     await db.delete(request_status)
     await db.commit()
@@ -388,6 +411,19 @@ async def delete_user(db: db_dependency, data: DeleteRoleRequest, current_user: 
     await db.delete(role)
     await db.commit()
 
+@router.delete('/delete-task', summary="Удаление задачи по id")
+async def delete_task(db: db_dependency, data: DeleteRoleRequest, current_user: dict = Depends(get_current_user_with_roles(["ADMIN", "MODERATOR"]))):
+    query = select(Task).where(Task.id == data.id)
+    result = await db.execute(query)
+    task = result.scalar_one_or_none()
+    if task is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Задачи с таким id нет в базе данных"
+        )
+    await db.delete(task)
+    await db.commit()
+
 
 @router.delete('/delete-project', summary="Удаление проекта по id")
 async def delete_project(db: db_dependency, data: DeleteRoleRequest):
@@ -403,7 +439,7 @@ async def delete_project(db: db_dependency, data: DeleteRoleRequest):
     await db.commit()
 
 @router.delete('/delete-request', summary="Удаление заявки по id")
-async def delete_request(db: db_dependency, data: DeleteRoleRequest):
+async def delete_request(db: db_dependency, data: IdRequest):
     query = select(Request).where(Request.id == data.id)
     result = await db.execute(query)
     request = result.scalar_one_or_none()
@@ -429,4 +465,66 @@ async def delete_chat(db: db_dependency, data: DeleteRoleRequest, current_user: 
     await db.delete(chat)
     await db.commit()
 
+class CreateTaskRequest(BaseModel):
+    title: str
+    description: Optional[str] = None
+    project_id: uuid.UUID
+    status_id: uuid.UUID
+    priority_id: uuid.UUID
+    deadline: Optional[datetime] = None
+    assignee_ids: Optional[List[uuid.UUID]] = []
 
+@router.post("/create-task")
+async def create_task(
+    request: CreateTaskRequest,
+    db: db_dependency,
+    current_user: dict = Depends(get_current_user_with_roles(["ADMIN", "MODERATOR"]))
+):
+    # Проверка: существует ли проект
+    project_result = await db.execute(select(Project).where(Project.id == request.project_id))
+    project = project_result.scalar_one_or_none()
+    if not project:
+        raise HTTPException(status_code=404, detail="Проект не найден")
+
+    # Проверка: существует ли статус
+    status_result = await db.execute(select(TaskStatus).where(TaskStatus.id == request.status_id))
+    status_obj = status_result.scalar_one_or_none()
+    if not status_obj:
+        raise HTTPException(status_code=404, detail="Статус задачи не найден")
+
+    # Проверка: существует ли приоритет
+    priority_result = await db.execute(select(TaskPriority).where(TaskPriority.id == request.priority_id))
+    priority_obj = priority_result.scalar_one_or_none()
+    if not priority_obj:
+        raise HTTPException(status_code=404, detail="Приоритет задачи не найден")
+
+    deadline = request.deadline.astimezone(timezone.utc).replace(tzinfo=None)
+    # Создаём задачу
+    new_task = Task(
+        title=request.title,
+        description=request.description,
+        project_id=request.project_id,
+        status_id=request.status_id,
+        priority_id=request.priority_id,
+        deadline=deadline
+    )
+    db.add(new_task)
+    await db.commit()
+    await db.refresh(new_task)
+
+    # Назначаем исполнителей
+    for user_id in request.assignee_ids:
+        user_result = await db.execute(select(User).where(User.id == user_id))
+        user = user_result.scalar_one_or_none()
+        if not user:
+            raise HTTPException(status_code=404, detail=f"Пользователь {user_id} не найден")
+
+        task_assignment = TaskAssignment(
+            task_id=new_task.id,
+            user_id=user_id
+        )
+        db.add(task_assignment)
+
+    await db.commit()
+
+    return {"detail": "Задача успешно создана", "task_id": new_task.id}

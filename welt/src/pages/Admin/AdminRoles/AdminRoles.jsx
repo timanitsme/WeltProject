@@ -102,7 +102,7 @@ export default function AdminRoles(){
         <PageBuilder paths={paths} sideComponent={<SideNavigation title="Администрирование" paths={getAdminSidePaths()} alias={"roles"}/>}>
             <div className={styles.spaceBetween}>
                 <h3>Роли</h3>
-                <button className={`button-primary ${styles.iconButton}`}><FaPlus/> Добавить роль</button>
+                <button className={`button-primary ${styles.iconButton}`} onClick={() => navigate("/admin/roles/add")}><FaPlus/> Добавить роль</button>
             </div>
             <div className="horizontal-divider"></div>
             {rolesIsLoading &&

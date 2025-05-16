@@ -105,7 +105,7 @@ async def get_tasks_by_project(db: db_dependency, project_id: uuid.UUID):
     statuses_result = await db.execute(select(TaskStatus))
     statuses = statuses_result.scalars().all()
 
-    tasks_by_status = {}
+    grouped_tasks = []
 
     for status in statuses:
         result = await db.execute(
@@ -122,28 +122,36 @@ async def get_tasks_by_project(db: db_dependency, project_id: uuid.UUID):
             )
             assignees = assignees_result.scalars().all()
 
+            priority_title = (
+                await db.execute(
+                    select(TaskPriority.title).where(TaskPriority.id == task.priority_id)
+                )
+            ).scalar_one()
+
             tasks_data.append({
                 "id": task.id,
                 "title": task.title,
                 "description": task.description,
-                "status": {
-                    "id": task.status_id,
-                    "title": status.title
-                },
                 "priority": {
                     "id": task.priority_id,
-                    "title": (await db.execute(select(TaskPriority.title).where(TaskPriority.id == task.priority_id))).scalar_one(),
+                    "title": priority_title,
                 },
                 "deadline": task.deadline,
                 "assignees": [
                     {"id": u.id, "name": f"{u.first_name} {u.last_name}", "avatar": u.avatar}
                     for u in assignees
-                ]
+                ],
             })
 
-        tasks_by_status[status.title] = tasks_data
+        grouped_tasks.append({
+            "status": {
+                "id": status.id,
+                "title": status.title,
+            },
+            "tasks": tasks_data,
+        })
 
-    return tasks_by_status
+    return grouped_tasks
 
 
 @router.post('/create-task-priority', summary="Создание нового приоритета задачи")

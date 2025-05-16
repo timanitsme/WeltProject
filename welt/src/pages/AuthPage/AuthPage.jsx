@@ -23,7 +23,8 @@ export default function AuthPage(){
             );
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault()
         if (password.trim().length === 0 || email.trim().length === 0){
             toast.error("Заполните все поля")
         }
@@ -51,18 +52,29 @@ export default function AuthPage(){
 
     return(
         <div className={styles.authSection}>
-            <div className={styles.authForm}>
+            <form onSubmit={handleSubmit} className={styles.authForm}>
                 <h3>Авторизация</h3>
                 <div className={styles.inputContainer}>
                     <p>Email</p>
-                    <TextInput inputValue={email} setInputValue={setEmail} placeholder={"Введите ваш email"}></TextInput>
+                    <TextInput
+                        inputValue={email}
+                        setInputValue={setEmail}
+                        placeholder={"Введите ваш email"}
+                    ></TextInput>
                 </div>
                 <div className={styles.inputContainer}>
                     <p>Пароль</p>
-                    <PasswordInput  placeholder={"Введите пароль"} setInputValue={setPassword} inputValue={password}></PasswordInput>
+                    <PasswordInput
+                        placeholder={"Введите пароль"}
+                        setInputValue={setPassword}
+                        inputValue={password}
+                    ></PasswordInput>
                 </div>
-                <button onClick={handleSubmit} className="button-primary">Войти</button>
-            </div>
+
+                <button type="submit" className="button-primary">
+                    Войти
+                </button>
+            </form>
         </div>
     )
 }

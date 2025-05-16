@@ -1,0 +1,46 @@
+@use "../../../../utils/partialStyles/_pxToRem.scss" as *;
+
+.fileInput {
+  width: 100%;
+  margin-bottom: rem(15);
+  cursor: pointer;
+}
+
+.fileInput label {
+  display: block;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.fileInput input[type="file"] {
+  width: 100%;
+  padding: rem(11);
+  border-radius: rem(5);
+  color: var(--txt-active);
+  border: none;
+  outline: none;
+  background: var(--fg);
+}
+
+.customFileButton {
+  display: inline-block;
+  padding: rem(10) rem(15);
+  background-color: var(--primary);
+  color: var(--surface);
+  border-radius: rem(4);
+  cursor: pointer;
+  text-align: center;
+}
+
+.customFileButton:hover {
+  background-color: var(--fg-accent);
+}
+
+.customFileButton:active {
+  background-color: var(--primary);
+}
+
+.customFileButton span {
+  margin-left: rem(10);
+  color: var(--txt-active);
+}

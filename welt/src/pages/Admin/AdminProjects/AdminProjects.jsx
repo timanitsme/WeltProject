@@ -120,7 +120,7 @@ export default function AdminProjects(){
         <PageBuilder paths={paths} sideComponent={<SideNavigation title="Администрирование" paths={getAdminSidePaths()} alias={"projects"}/>}>
             <div className={styles.spaceBetween}>
                 <h3>Проекты</h3>
-                <button className={`button-primary ${styles.iconButton}`}><FaPlus/> Добавить проект</button>
+                <button className={`button-primary ${styles.iconButton}`} onClick={() => navigate("/admin/projects/add")}><FaPlus/> Добавить проект</button>
             </div>
             <div className="horizontal-divider"></div>
             {projectsIsLoading &&
