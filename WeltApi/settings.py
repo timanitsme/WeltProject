@@ -9,7 +9,7 @@ DB_HOST = env.str(
 
 REAL_DATABASE_URL = env.str(
     "REAL_DATABASE_URL",
-    default=f"postgresql+asyncpg://postgres:postgres@localhost:5442/postgres"
+    default=f"postgresql+asyncpg://postgres:postgres@db:5432/postgres"
 )
 
 BASE_URL = env.str(
