@@ -4,17 +4,17 @@ env=Env()
 
 DB_HOST = env.str(
     "DB_HOST",
-    default="localhost:5442"
+    default="db:5432"
 )
 
 REAL_DATABASE_URL = env.str(
     "REAL_DATABASE_URL",
-    default=f"postgresql+asyncpg://postgres:postgres@localhost:5442/postgres"
+    default=f"postgresql+asyncpg://postgres:postgres@db:5432/postgres"
 )
 
 BASE_URL = env.str(
     "BASE_URL",
-    default="http://localhost:8000"
+    default="http://176.124.212.130:8000"
 )
 
 
