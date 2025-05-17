@@ -1,6 +1,7 @@
-@use "../../../utils/partialStyles/pxToRem" as *;
+@use "../../../../utils/partialStyles/pxToRem" as *;
 
 .navigationContainer{
+  height: 100vh;
   background: var(--surface);
   display: flex;
   flex-direction: column;

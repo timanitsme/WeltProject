@@ -121,7 +121,7 @@ export default function AdminRequests(){
         <PageBuilder paths={paths} sideComponent={<SideNavigation title="Администрирование" paths={getAdminSidePaths()} alias={"requests"}/>}>
             <div className={styles.spaceBetween}>
                 <h3>Заявки</h3>
-                <button className={`button-primary ${styles.iconButton}`}><FaPlus/> Добавить заявку</button>
+                <button className={`button-primary ${styles.iconButton}`} onClick={() => navigate("/admin/requests/add")}><FaPlus/> Добавить заявку</button>
             </div>
             <div className="horizontal-divider"></div>
             {requestsIsLoading &&

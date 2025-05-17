@@ -17,6 +17,7 @@ import ContextMenu from "../../../components/ContextMenu/ContextMenu.jsx";
 import Tooltip from "../../../components/Tooltip/Tooltip.jsx";
 import {RiCloseCircleFill, RiProgress1Fill} from "react-icons/ri";
 import {FaCheckSquare, FaInbox} from "react-icons/fa";
+import useAuth from "../../../utils/customHooks/useAuth.js";
 
 export default function RequestDetail(){
     const params = useParams()
@@ -27,9 +28,10 @@ export default function RequestDetail(){
     const [newMessage, setNewMessage] = useState("")
     const messagesContainerRef = useRef(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false)
+    const { currentProject } = useAuth();
 
     const paths =[
-        {title: "DoWork", path: ""},
+        {title: `${currentProject?.title}`, path: ""},
         {title: "Заявки", path: "/requests"},
         {title: `Заявка ${request?.id}`, path: ""}
     ]

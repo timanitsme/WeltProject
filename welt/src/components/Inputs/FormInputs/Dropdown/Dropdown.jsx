@@ -22,7 +22,7 @@ export default function Dropdown({label, options, selectedOption, onSelect, isLo
                     }}
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                 >
-                    {selectedOption?.title || placeholder}
+                    {selectedOption?.title || (selectedOption?.last_name && selectedOption?.first_name && `${selectedOption.last_name} ${selectedOption.first_name}`) || placeholder}
                     <FaChevronDown />
                 </div>
 
@@ -57,7 +57,7 @@ export default function Dropdown({label, options, selectedOption, onSelect, isLo
                                     }}
                                     onClick={() => {onSelect(option); setIsDropdownOpen(false)}}
                                 >
-                                    {option.title}
+                                    {option?.title || `${option?.last_name} ${option?.first_name}`}
                                 </div>
                             ))
                         )}

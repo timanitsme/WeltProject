@@ -6,12 +6,14 @@ import Request from "../../../components/Request/Request.jsx";
 import {FaFolderOpen} from "react-icons/fa6";
 import {RiCloseCircleFill, RiProgress1Fill} from "react-icons/ri";
 import {FaCheckSquare, FaInbox} from "react-icons/fa";
+import useAuth from "../../../utils/customHooks/useAuth.js";
 
 export default function RequestsInProgress(){
     const {data: requests, isLoading: requestsIsLoading, requestsError} = useGetRequestsQuery({status: "IN PROGRESS"})
+    const { currentProject } = useAuth();
 
     const paths =[
-        {title: "DoWork", path: ""},
+        {title: `${currentProject?.title}`, path: ""},
         {title: "Заявки", path: "/requests"},
         {title: "Все заявки", path: "/requests"}
     ]

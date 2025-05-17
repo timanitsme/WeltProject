@@ -7,10 +7,11 @@ import {useGetProfileQuery, useGetRequestsQuery} from "../../../store/services/w
 import {FaFolderOpen} from "react-icons/fa6";
 import {RiCloseCircleFill, RiProgress1Fill} from "react-icons/ri";
 import {FaCheckSquare, FaInbox} from "react-icons/fa";
+import useAuth from "../../../utils/customHooks/useAuth.js";
 
 export default function AllRequests(){
     const {data: requests, isLoading: requestsIsLoading, requestsError} = useGetRequestsQuery()
-
+    const { currentProject } = useAuth();
     const sidePaths = [
         {Icon: FaFolderOpen, text: "Все заявки", path: "/requests", alias: "all-requests"},
         {Icon: RiProgress1Fill, text: "В работе", path: "/requests/in-progress/", alias: "in-progress-requests"},
@@ -20,7 +21,7 @@ export default function AllRequests(){
     ]
 
     const paths =[
-        {title: "DoWork", path: ""},
+        {title: `${currentProject?.title}`, path: ""},
         {title: "Заявки", path: "/requests"},
         {title: "Все заявки", path: "/requests"}
     ]

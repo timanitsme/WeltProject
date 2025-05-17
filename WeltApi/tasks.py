@@ -9,6 +9,7 @@ from sqlalchemy import select
 from auth import get_current_user
 from database import db_dependency
 from models import TaskStatus, TaskPriority, Task, User, TaskAssignment, Project
+from settings import BASE_URL
 
 router = APIRouter(
     prefix='/tasks',
@@ -138,7 +139,7 @@ async def get_tasks_by_project(db: db_dependency, project_id: uuid.UUID):
                 },
                 "deadline": task.deadline,
                 "assignees": [
-                    {"id": u.id, "name": f"{u.first_name} {u.last_name}", "avatar": u.avatar}
+                    {"id": u.id, "name": f"{u.first_name} {u.last_name}", "avatar": f"{BASE_URL}/{u.avatar}"}
                     for u in assignees
                 ],
             })

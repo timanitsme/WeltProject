@@ -3,15 +3,19 @@ import PageBuilder from "../../../components/PageBuilder/PageBuilder.jsx";
 import SideNavigation from "../../../components/Navigation/SideNavigation/SideNavigation.jsx";
 import styles from "../CompletedRequests/CompletedRequests.module.scss";
 import Request from "../../../components/Request/Request.jsx";
-import {FaFolderOpen} from "react-icons/fa6";
+import {FaFolderOpen, FaPlus} from "react-icons/fa6";
 import {RiCloseCircleFill, RiProgress1Fill} from "react-icons/ri";
 import {FaCheckSquare, FaInbox} from "react-icons/fa";
+import {useNavigate} from "react-router-dom";
+import useAuth from "../../../utils/customHooks/useAuth.js";
 
 export default function MyRequests(){
+    const navigate = useNavigate()
     const {data: requests, isLoading: requestsIsLoading, requestsError} = useGetSentRequestsQuery()
+    const { currentProject } = useAuth();
 
     const paths =[
-        {title: "DoWork", path: ""},
+        {title: `${currentProject?.title}`, path: ""},
         {title: "Заявки", path: "/requests"},
         {title: "Все заявки", path: "/requests"}
     ]
@@ -26,7 +30,10 @@ export default function MyRequests(){
 
     return(
         <PageBuilder paths={paths} sideComponent={<SideNavigation title="Заявки" paths={sidePaths}  alias={"my-requests"}/>}>
-            <h3>Мои заявки</h3>
+            <div className={styles.spaceBetween}>
+                <h3>Заявки</h3>
+                <button className={`button-primary ${styles.iconButton}`} onClick={() => navigate("/requests/add")}><FaPlus/> Новая заявка</button>
+            </div>
             <div className="horizontal-divider"></div>
             {requestsIsLoading && <div><p>Загрузка...</p></div>}
             {requestsError && <div><p>Не удалось получить заявки</p></div>}

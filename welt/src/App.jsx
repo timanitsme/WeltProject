@@ -32,6 +32,9 @@ import AddRole from "./pages/Admin/AdminRoles/AddRole/AddRole.jsx";
 import AdminTasks from "./pages/Admin/AdminTasks/AdminTasks.jsx";
 import AddUser from "./pages/Admin/AdminUsers/AddUser/AddUser.jsx";
 import AddTask from "./pages/Admin/AdminTasks/AddTask/AddTask.jsx";
+import AddRequest from "./pages/Admin/AdminRequests/AddRequest/AddRequest.jsx";
+import AddUserRequest from "./pages/Requests/AddUserRequest/AddUserRequest.jsx";
+import AddUserTask from "./pages/Tasks/AddUserTask/AddUserTask.jsx";
 
 function App() {
     const dispatch = useDispatch();
@@ -76,6 +79,7 @@ function App() {
         {title: "Все заявки", path: "/request/:id", element: <RequestDetail/>},
         {title: "Задачи", path: "/tasks", element: <Tasks/>},
         {title: "Чат", path: "/chats", element: <ChatPage/>},
+        {title: "Чат", path: "/chats/:id", element: <ChatPage/>},
         {title: "Настройки", path: "/settings", element: <Settings/>},
         {title: "Администрирование", path: "/admin", element: <AdminIndexPage/>},
         {title: "Администрирование пользователей", path: "/admin/users", element: <AdminUsers/>},
@@ -85,6 +89,9 @@ function App() {
         {title: "Новая роль", path: "/admin/roles/add", element: <AddRole/>},
         {title: "Новый пользователь", path: "/admin/users/add", element: <AddUser/>},
         {title: "Новая задача", path: "/admin/tasks/add", element: <AddTask/>},
+        {title: "Новая задача от пользователя", path: "/tasks/add/:id", element: <AddUserTask/>},
+        {title: "Новая заявка", path: "/admin/requests/add", element: <AddRequest/>},
+        {title: "Новая заявка от пользователя", path: "/requests/add", element: <AddUserRequest/>},
         {title: "Администрирование заявок", path: "/admin/requests", element: <AdminRequests/>},
         {title: "Администрирование задач", path: "/admin/tasks", element: <AdminTasks/>}
     ]

@@ -203,6 +203,19 @@ export const weltApi = createApi({
                 })
             }
         })),
+        createAdminRequest: (builder.mutation({
+            query: ({subject, description, project_id, sender_id, receiver_id}) => {
+                return({
+                    url: `admin/create-request`,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ subject, description, project_id, sender_id, receiver_id}),
+                })
+            }
+        })),
+
 
         // chats
         getMyDialogues: (builder.query({
@@ -261,6 +274,11 @@ export const weltApi = createApi({
             query: () => `projects/my-projects`
         })),
 
+        getMyProjectsPaginated: (builder.query({
+            query: ({page, perPage}) => {
+                return `projects/my-projects-paginated?page=${page}&per_page=${perPage}`
+            }
+        })),
 
         // requests
         getRequests: (builder.query({
@@ -290,15 +308,42 @@ export const weltApi = createApi({
                 })
             }
         })),
+        createRequest: (builder.mutation({
+            query: ({subject, description, project_id, receiver_id}) => {
+                return({
+                    url: `requests/create-request`,
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ subject, description, project_id, receiver_id}),
+                })
+            }
+        })),
 
         // users
-
+        getUsersExceptMe: (builder.query({
+            query: ({page, perPage}) => {
+                return `users/users-except-me?page=${page}&per_page=${perPage}`
+            }
+        })),
 
         //tasks
         getTasksByProject: (builder.query({
             query: ({projectId}) => `tasks/project/${projectId}`
         })),
-
+        updateTaskStatus: (builder.mutation({
+            query: ({task_id, status_id}) => {
+                return({
+                    url: `tasks/${task_id}/update-status`,
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ status_id}),
+                })
+            }
+        })),
 
 
 
@@ -315,6 +360,8 @@ useDeleteRoleMutation, useGetAllProjectsQuery, useDeleteProjectMutation,
 useGetAllRequestsQuery, useDeleteRequestMutation, useCreateProjectMutation,
 useCreateRoleMutation, useGetAllTasksQuery, useDeleteTaskMutation,
 useCreateUserMutation, useCreateTaskMutation, useGetAllTaskPrioritiesQuery,
-useGetAllTaskStatusesQuery, useGetTasksByProjectQuery} = weltApi
+useGetAllTaskStatusesQuery, useGetTasksByProjectQuery, useCreateAdminRequestMutation,
+useGetUsersExceptMeQuery, useCreateRequestMutation, useGetMyProjectsPaginatedQuery,
+useUpdateTaskStatusMutation} = weltApi
 
 export { baseQuery };

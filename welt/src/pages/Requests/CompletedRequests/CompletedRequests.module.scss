@@ -9,3 +9,21 @@
   overflow-y: auto;
   scrollbar-gutter: stable;
 }
+
+.spaceBetween{
+  display: flex;
+  justify-content: space-between;
+  gap: rem(15);
+  align-items: center;
+}
+
+.iconButton{
+  display: flex;
+  gap: rem(5);
+  align-items: center;
+  justify-content: center;
+}
+
+.iconButton svg{
+  color: var(--surface);
+}

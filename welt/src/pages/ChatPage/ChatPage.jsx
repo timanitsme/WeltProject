@@ -15,9 +15,11 @@ import groupMessagesByDate from "../../utils/functions/groupMessagesByDate.js";
 import {logout, setCredentials, setUserProfile} from "../../store/services/authSlice.js";
 import {toast} from "react-toastify";
 import ContextMenu from "../../components/ContextMenu/ContextMenu.jsx";
+import {useParams} from "react-router-dom";
 
 export default function ChatPage(){
-    const [selectedChat, setSelectedChat] = useState(null)
+    const { id } = useParams();
+    const [selectedChat, setSelectedChat] = useState(id || null)
     const [newMessage, setNewMessage] = useState("")
     const {data: chat, isLoading: chatIsLoading, error: chatError, refetch: refreshChat} = useGetChatMessagesQuery({chatId: selectedChat}, {skip: selectedChat === null})
     const [sendMessage, {isLoading: sendMessageIsLoading, isSuccess: sendMessageIsSuccess}] = useSendMessageMutation()

@@ -92,8 +92,93 @@ async def get_all_task_statuses(db: db_dependency, current_user: dict = Depends(
         "data": task_statuses
     }
 
+class CreateRequestPayload(BaseModel):
+    project_id: UUID
+    subject: str
+    description: str
+    sender_id: UUID
+    receiver_id: UUID
+
+@router.post('/create-request', summary="Создание новой заявки")
+async def create_request(
+    payload: CreateRequestPayload,
+    db: db_dependency,
+    current_user: dict = Depends(get_current_user_with_roles(["ADMIN", "MODERATOR"]))
+):
+    project_id = payload.project_id
+    subject = payload.subject
+    description = payload.description
+    sender_id = payload.sender_id
+    receiver_id = payload.receiver_id
+
+    sender_query = select(User).where(User.id == sender_id)
+    sender_result = await db.execute(sender_query)
+    sender = sender_result.scalar_one_or_none()
+    if not sender:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Пользователь-отправитель не найден"
+        )
+
+    receiver_query = select(User).where(User.id == receiver_id)
+    receiver_result = await db.execute(receiver_query)
+    receiver = receiver_result.scalar_one_or_none()
+    if not receiver:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Пользователь-получатель не найден"
+        )
+
+    status_query = select(RequestStatus).where(RequestStatus.title == "IN PROGRESS")
+    status_result = await db.execute(status_query)
+    request_status = status_result.scalar_one_or_none()
+    if not request_status:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Статус 'IN PROGRESS' не найден"
+        )
+
+    new_request = Request(
+        project_id=project_id,
+        status_id=request_status.id,
+        subject=subject,
+        description=description,
+        sender_id=sender_id,
+        receiver_id=receiver_id
+    )
+    db.add(new_request)
+    await db.commit()
+    await db.refresh(new_request)
+
+    chat = Chat(
+        name="",
+        is_group_chat=False,
+        project_id=project_id,
+        request_id=new_request.id
+    )
+    db.add(chat)
+    await db.commit()
+    await db.refresh(chat)
+
+    participants = [sender_id, receiver_id]
+    for participant_id in participants:
+        participant = ChatParticipant(chat_id=chat.id, user_id=participant_id)
+        db.add(participant)
+    await db.commit()
+
+    return {
+        "id": new_request.id,
+        "project_id": new_request.project_id,
+        "status": {"id": request_status.id, "title": request_status.title},
+        "subject": new_request.subject,
+        "description": new_request.description,
+        "sender_id": new_request.sender_id,
+        "receiver_id": new_request.receiver_id,
+        "chat_id": chat.id
+    }
+
 @router.get('/all-task-priorities', summary="Получение всех приоритетов задач")
-async def get_all_task_priorities(db: db_dependency, current_user: dict = Depends(get_current_user_with_roles(["ADMIN", "MODERATOR"])), page: int = Query(0, ge=0, description="Номер страницы"), per_page: int = Query(10, ge=1, le=100, description="Количество элементов на странице")):
+async def get_all_task_priorities(db: db_dependency, current_user: dict = Depends(get_current_user), page: int = Query(0, ge=0, description="Номер страницы"), per_page: int = Query(10, ge=1, le=100, description="Количество элементов на странице")):
     offset = page * per_page
 
     query = select(TaskPriority).offset(offset).limit(per_page)
@@ -478,7 +563,7 @@ class CreateTaskRequest(BaseModel):
 async def create_task(
     request: CreateTaskRequest,
     db: db_dependency,
-    current_user: dict = Depends(get_current_user_with_roles(["ADMIN", "MODERATOR"]))
+    current_user: dict = Depends(get_current_user)
 ):
     # Проверка: существует ли проект
     project_result = await db.execute(select(Project).where(Project.id == request.project_id))

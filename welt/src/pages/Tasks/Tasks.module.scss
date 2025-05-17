@@ -10,6 +10,8 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 15px;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .taskHeader{
@@ -52,8 +54,20 @@
 
 .taskCol{
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: rem(10);
+  height: 100%;
+  &[data-over] {
+    background: var(--fg);
+  }
+}
+
+.taskColContent{
+  display: flex;
+  flex-direction: column;
+  gap: rem(10);
+  height: 100%;
 }
 
 .task{
@@ -62,6 +76,18 @@
   border-radius: rem(5);
   display: flex;
   flex-direction: column;
+  gap: rem(5);
+  cursor: pointer;
+}
+
+.gapLine{
+  display: flex;
   align-items: center;
-  gap: rem(7);
+  gap: rem(10);
+}
+
+.assignees {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
 }

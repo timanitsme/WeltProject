@@ -8,11 +8,10 @@ import {useCreatePrivateChatMutation} from "../../../store/services/welt.js";
 import {toast} from "react-toastify";
 import {Avatar} from "@mui/material";
 
-export default function Dialogues({selectedChat, setSelectedChat, dialogues, dialoguesIsLoading, dialoguesError, searchInput, setSearchInput, onNewChatCreated}){
+export default function Dialogues({selectedChat, setSelectedChat, dialogues, dialoguesIsLoading, dialoguesError, searchInput, setSearchInput, onNewChatCreated, onDialogueClick, showSearch = true}){
     const location = useLocation()
     const navigate = useNavigate()
     const [createPrivateChat, {isLoading: createPrivateChatIsLoading, isSuccess: createPrivateChatIsSuccess}] = useCreatePrivateChatMutation()
-
     const getFormattedDate = (dateString) => {
         const date = new Date(`${dateString}Z`);
 
@@ -39,13 +38,15 @@ export default function Dialogues({selectedChat, setSelectedChat, dialogues, dia
     }
 
     return(
-        <div className={styles.navigationContainer}>
+        <div className={styles.navigationContainer} style={{height: `${onDialogueClick? "100%": "100vh"}`}}>
             <h6>Чаты</h6>
-            <div className={styles.searchBar}>
-                <FaSearch/>
-                <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder="Поиск"/>
-                {searchInput.length > 0 && <IoClose style={{marginLeft: "auto"}} onClick={() => setSearchInput("")}/>}
-            </div>
+            {showSearch &&
+                <div className={styles.searchBar}>
+                    <FaSearch/>
+                    <input type="text" value={searchInput} onChange={(e) => setSearchInput(e.target.value)} placeholder="Поиск"/>
+                    {searchInput.length > 0 && <IoClose style={{marginLeft: "auto"}} onClick={() => setSearchInput("")}/>}
+                </div>
+            }
             <div className="horizontal-divider"/>
             <div className={styles.dialoguesContainer}>
                 {dialoguesIsLoading && <p>Загрузка...</p>}
@@ -53,7 +54,15 @@ export default function Dialogues({selectedChat, setSelectedChat, dialogues, dia
                 {dialogues?.chats?.length === 0 && dialogues?.users_without_chats?.length === 0 && <p>Диалоги отсутствуют</p>}
                 {!dialoguesIsLoading && !dialoguesError && dialogues?.chats?.map(((dialogue, index) => {
                     return(
-                        <div key={index} className={`${styles.dialogue} noSelect ${selectedChat === dialogue.id? styles.selected: ""}`} onClick={() => selectedChat === dialogue.id? setSelectedChat(null): setSelectedChat(dialogue.id)}>
+                        <div key={index} className={`${styles.dialogue} noSelect ${selectedChat === dialogue.id? styles.selected: ""}`} onClick={() => {
+                            if(onDialogueClick) {
+                                onDialogueClick(dialogue.id);
+                            } else if(selectedChat === dialogue.id) {
+                                setSelectedChat(null);
+                            } else {
+                                setSelectedChat(dialogue.id);
+                            }
+                        }}>
                             {dialogue["is_group_chat"]? <Avatar src={`${dialogue?.icons?.length > 0?  dialogue?.icons[0]: ""}`}></Avatar>
                             : <Avatar src={`${dialogue?.icons?.length > 0?  dialogue?.icons[0]: ""}`}></Avatar>
                             }

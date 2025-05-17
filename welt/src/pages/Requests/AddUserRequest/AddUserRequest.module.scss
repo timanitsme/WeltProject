@@ -1,0 +1,8 @@
+@use "../../../utils/partialStyles/_pxToRem.scss" as *;
+
+.pageForm {
+  padding: rem(20);
+  border: rem(1) solid var(--fg);
+  border-radius: rem(8);
+  background-color: var(--surface);
+}

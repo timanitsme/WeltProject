@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException
+from pydantic import BaseModel
 from sqlalchemy import select, and_, or_
 
 from auth import get_current_user
@@ -13,16 +14,23 @@ router = APIRouter(
     tags=['requests']
 )
 
+class CreateRequestPayload(BaseModel):
+    project_id: UUID
+    subject: str
+    description: str
+    receiver_id: UUID
+
 @router.post('/create-request', summary="Создание новой заявки")
 async def create_request(
-    project_id: UUID,
-    subject: str,
-    description: str,
-    receiver_id: UUID,
+    payload: CreateRequestPayload,
     db: db_dependency,
     current_user: dict = Depends(get_current_user)
 ):
+    project_id = payload.project_id
+    subject = payload.subject
+    description = payload.description
     sender_id = current_user.id
+    receiver_id = payload.receiver_id
 
     receiver_query = select(User).where(User.id == receiver_id)
     receiver_result = await db.execute(receiver_query)
